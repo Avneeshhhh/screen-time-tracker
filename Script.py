@@ -66,4 +66,13 @@ INSERT INTO usage(
 def update_dashboard():
     pass
 
+ctk.set_appearance_mode("light")
+ctk.set_default_color_theme("blue")
+
+app = ctk.CTk()
+app.geometry("1100x750")
+app.title("Screen Time Tracker")
+app.configure(fg_color = "#f3f4f6")
+app.mainloop()
+
 print(get_active_app())
