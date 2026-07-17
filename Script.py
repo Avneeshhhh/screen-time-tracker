@@ -66,6 +66,30 @@ INSERT INTO usage(
 def update_dashboard():
     pass
 
+def update_live_timer():
+    pass
+
+def start_tracking():
+    global tracking
+    global session_seconds
+
+    if tracking:
+        return 
+    session_seconds = 0
+
+    tracking = True
+
+    status_label.configure(
+        text = "Tracking Running"
+    )
+
+    update_live_timer()
+
+    thread = threading.Thread(
+        target = tracking_loop,
+        daemon = True
+    )
+    thread.start()
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
@@ -124,6 +148,61 @@ start_btn = ctk.CTkButton(
     height = 45,
     font = ("Arial", 16, "bold"),
     command = start_tracking
+)
+
+start_btn.grid(
+    row = 0, 
+    column = 3,
+    padx = 12,
+    pady = 15
+)
+
+stop_btn = ctk.CTkButton(
+    button_frame,
+    text = "Stop Tracking",
+    width = 180,
+    height = 45,
+    font = ("Arial", 16, "bold"),
+    command = stop_tracking
+)
+
+stop_btn.grid(
+    row = 0, 
+    column = 1,
+    padx = 12,
+    pady = 15
+)
+
+chart_btn = ctk.CTkButton(
+    button_frame,
+    text = "View Chart",
+    width = 180,
+    height = 45,
+    font = ("Arial", 16, "bold"),
+    command = show_chart
+)
+
+chart_btn.grid(
+    row = 0, 
+    column = 2,
+    padx = 12,
+    pady = 15
+)
+
+export_btn = ctk.CTkButton(
+    button_frame,
+    text = "Export CSV",
+    width = 180,
+    height = 45,
+    font = ("Arial", 16, "bold"),
+    command = export_report
+)
+
+export_btn.grid(
+    row = 0, 
+    column = 3,
+    padx = 12,
+    pady = 15
 )
 
 app.mainloop()
