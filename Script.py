@@ -64,7 +64,37 @@ INSERT INTO usage(
 
 
 def update_dashboard():
-    pass
+    total_time = sum(usage_data.values())
+    hours = total_time // 3600
+    minutes = (total_time % 3600) // 60
+    seconds = total_time % 60
+
+    total_label.configure(
+        text = f"Total Time: {hours:02}:{minutes:02}:{seconds:02}"
+    )
+
+    sorted_apps = sorted(
+        usage_data.items(),
+        key = lambda x:x[1],
+        reverse = True
+    )
+
+    text = ""
+
+    for app, sec in sorted_apps[:5]:
+
+        hours = sec // 3600
+        minutes = (sec % 3600) // 60
+        seconds = sec % 60
+
+        text += (
+            f"{app:<25}"
+            f"{hours:02}:{minutes:02}:{seconds:02}\n"
+        )
+
+        app_box.configure(text=text)
+
+
 
 def update_live_timer():
     if tracking:
@@ -102,6 +132,42 @@ def start_tracking():
         daemon = True
     )
     thread.start()
+
+def stop_tracking():
+    global tracking
+    tracking = False
+    timer_label.configure(
+        text = "00:00:00"
+    )
+    save_to_database()
+
+    status_label.configure(
+        text = "Tracking Stop"
+    )
+
+def show_chart():
+
+    if not usage_data:
+        messagebox.showwarning(
+            "No Data",
+            "Track some apps first!"
+        )
+        return
+    
+    apps = list(usage_data.keys())
+    seconds = list(usage_data.values())
+
+    plt.figure(figsize=(7,7))
+    plt.pie(
+        seconds,
+        labels = apps,
+        autopct = "%1.1f%%"
+    )
+
+    plt.title("Screen Time Disctribution")
+
+    plt.show()
+
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
@@ -216,6 +282,34 @@ export_btn.grid(
     padx = 12,
     pady = 15
 )
+
+#Total Time
+
+total_label = ctk.CTkLabel(
+    app,
+    text = "Total Time: 0 mins",
+    font = ("Arial", 26, "bold"),
+    text_color = "#111827"
+)
+
+total_label.pack(pady = 20)
+
+#App Usage Box
+
+app_box = ctk.CTkLabel(
+    app,
+    text = "No Data Yet",
+    width = 850,
+    height = 400,
+    corner_radius = 20,
+    fg_color = "#FFFFFF",
+    text_color = "#111827",
+    anchor = "nw",
+    justify = "left",
+    font = ("Consolas", 20)
+)
+
+app_box.pack(pady = 30)
 
 app.mainloop()
 
