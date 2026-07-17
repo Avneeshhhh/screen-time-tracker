@@ -67,7 +67,19 @@ def update_dashboard():
     pass
 
 def update_live_timer():
-    pass
+    if tracking:
+        global session_seconds
+        session_seconds += 1
+
+        hours = session_seconds // 3600
+        minutes = (session_seconds % 3600) // 60
+        seconds = session_seconds % 60
+
+        timer_label.configure(
+            text = f"{hours:20}:{minutes:02}:{seconds:02}"
+        )
+
+        app.after(1000, update_live_timer)
 
 def start_tracking():
     global tracking
