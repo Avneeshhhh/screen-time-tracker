@@ -52,8 +52,8 @@ def tracking_loop():
 
 def save_to_database():
     today = datetime.now().strftime("%Y-%m-%d")
-    for app, seconds in usage_data.items()
-    cursor.execute("""
+    for app, seconds in usage_data.items():
+        cursor.execute("""
 INSERT INTO usage(
                    app_name,
                    usage_seconds,
@@ -73,6 +73,59 @@ app = ctk.CTk()
 app.geometry("1100x750")
 app.title("Screen Time Tracker")
 app.configure(fg_color = "#f3f4f6")
+
+#Title
+
+title = ctk.CTkLabel(
+    app,
+    text = "Screen Time Dashboard",
+    font = ("Arial", 36, "bold"),
+    text_color = "#1F2937" 
+)
+
+title.pack(pady=25)
+
+# Status
+
+status_label = ctk.CTkLabel(
+    app,
+    text = "Ready",
+    font = ("Arial", 20 , "bold"),
+    text_color = "#374151"
+)
+
+status_label.pack()
+
+timer_label = ctk.CTkLabel(
+    app,
+    text = "00:00:00",
+    font = ("Consolas", 42, "bold"),
+    text_color = "#F97316"
+)
+
+timer_label.pack(pady=10)
+
+#Button Frame
+
+button_frame = ctk.CTkFrame(
+    app,
+    fg_color = "#FFFFFF",
+    corner_radius = 15
+)
+
+button_frame.pack(pady=25)
+
+#button 
+
+start_btn = ctk.CTkButton(
+    button_frame,
+    text = "Start Tracking",
+    width = 180,
+    height = 45,
+    font = ("Arial", 16, "bold"),
+    command = start_tracking
+)
+
 app.mainloop()
 
 print(get_active_app())
